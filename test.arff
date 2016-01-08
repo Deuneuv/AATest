@@ -1,0 +1,23 @@
+@RELATION météo
+
+@ATTRIBUTE Prévisions {Soleil, Couvert, Pluie}
+@ATTRIBUTE Température {Chaude, Douce, Froide}
+@ATTRIBUTE Humidité {Elevée, Normale}
+@ATTRIBUTE Vent {Faible, Fort}
+@ATTRIBUTE Sport {OUI, NON}
+
+@DATA
+Soleil,Chaude,Elevée,Faible,NON
+Pluie,Froide,Normale,Fort,NON
+Soleil,Douce,Elevée,Faible,NON
+Pluie,Douce,Elevée,Fort,NON
+Soleil,Chaude,Elevée,Fort,NON
+Couvert,Chaude,Elevée,Faible,OUI
+Pluie,Douce,Elevée,Faible,OUI
+Pluie,Froide,Normale,Faible,OUI
+Couvert,Froide,Normale,Fort,OUI
+Soleil,Froide,Normale,Faible,OUI
+Pluie,Douce,Normale,Faible,OUI
+Soleil,Douce,Normale,Fort,OUI
+Couvert,Douce,Elevée,Fort,OUI
+Couvert,Chaude,Normale,Faible,OUI
