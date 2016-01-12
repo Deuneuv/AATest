@@ -6,7 +6,7 @@ public class Litteral {
 	
 	private String nameAttr;
 	private String valueAttr;
-	private int indexAttr;
+	private int indexAttr; //index dans la liste des attrituts du concept
 	private double gain; 
 	
 	public double getGain() {
@@ -42,8 +42,15 @@ public class Litteral {
 		
 	}
 	
-	public void tostring(){
-		System.out.print(nameAttr + " = " + valueAttr);
+	public Litteral(){
+		nameAttr = "";
+		valueAttr = "";
+		indexAttr = -1;
+		gain = -1.0;
+	}
+	
+	public String tostring(){
+		return (nameAttr + " = " + valueAttr);
 	}
 
 }

@@ -1,6 +1,8 @@
 package version1;
 import java.io.*;
 import java.util.*;
+
+import weka.associations.tertius.Literal;
 import weka.core.*;
 
 import weka.core.Instances;
@@ -42,13 +44,24 @@ public class Princi {
 			}
 			/*calcul le gain de chaque litteral*/
 			testpfoil.makeLitteraux(jeuExple);
+			double maximum = 0.0;
+			Litteral maxLitt = new Litteral();
 			System.out.println("----Les litteraux avec leur gain au début de l'apprentissage----\n");
 			ArrayList<Litteral> tmpLit = testpfoil.getListeLitteraux();
 			for(Litteral l : tmpLit){
-				l.tostring();
-				System.out.println(" ==> Gain : " +testpfoil.gain(l, positifs, negatifs));
+				System.out.print(l.tostring());
+				l.setGain(testpfoil.gain(l, positifs, negatifs));
+				System.out.println(" ==> Gain : " +l.getGain());
+				if(l.getGain() > maximum){
+					maximum = l.getGain();
+					maxLitt = l;
+				}
 			}
+			/* Affichage du litteral au gain maximum*/
+			System.out.println("----\nLe litteral avec le plus grand gain----\n");
+			System.out.println(maxLitt.tostring());
 			
+			testpfoil.foilProp(positifs, negatifs);
 		}
 	}
 

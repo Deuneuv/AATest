@@ -61,9 +61,7 @@ public class PFoil {
 		}
 		data = new Instances(data);
 		data.deleteWithMissingClass();
-		System.out.println(data.toString());
-		//makeRules(data);
-		
+		System.out.println(data.toString());		
 	}
 	/**
 	 * 
@@ -84,21 +82,6 @@ public class PFoil {
 		}*/
 	}
 	
-	/*public void makeRules(Instances data){
-		if (data.numInstances() == 0) {
-			return;
-		}
-		// Compute attribute with maximum information gain.
-		double[] infoGains = new double[data.numAttributes()];
-		Enumeration<Attribute> attEnum = data.enumerateAttributes();
-		while (attEnum.hasMoreElements()) {
-			Attribute att = (Attribute) attEnum.nextElement();
-			infoGains[att.index()] = computeInfoGain(data, att);
-		}
-		//m_Attribute = data.attribute(Utils.maxIndex(infoGains))
-	}*/
-
-	
 	/**
 	 * @param exples  vecteur d'instance
 	 * @param L littéral
@@ -117,6 +100,26 @@ public class PFoil {
 		
 	}
 	
+	public void retraitL(Vector<Instance> exples, Litteral L){
+		Instance temp;
+		for(int i = 0; i< exples.size(); ++i){
+			temp = (Instance) exples.elementAt(i);
+			if(temp.attribute(L.getIndexAttr()).name() != L.getNameAttr() || temp.stringValue(L.getIndexAttr()) != L.getValueAttr()){
+				exples.remove(i);
+			}
+		}		
+	}
+	
+	public void retraitL2(Vector<Instance> exples, Litteral L){
+		Instance temp;
+		for(int i = 0; i< exples.size(); ++i){
+			temp = (Instance) exples.elementAt(i);
+			if(temp.attribute(L.getIndexAttr()).name() == L.getNameAttr() || temp.stringValue(L.getIndexAttr()) == L.getValueAttr()){
+				exples.remove(i);
+			}
+		}		
+	}
+	
 	public double gain(Litteral litteral, Vector<Instance> pos, Vector<Instance> neg){
 		int P = pos.size();
 		int N = neg.size();
@@ -125,8 +128,8 @@ public class PFoil {
 		int p = satisfies(pos, litteral);
 		int n = satisfies(neg, litteral);
 		System.out.print(", n = "+n); System.out.print(", p = "+p);
-		double val1 = P/(P+N);
-		double val2 = p/(p+n);
+		double val1 = (double) P/(P+N);
+		double val2 = (double) p/(p+n);
 		double logGeneral = Math.log(val1) / Math.log(2.0);
 		double logLitteral = Math.log(val2) / Math.log(2.0);
 		double val_retour = -1.0; 
@@ -140,23 +143,65 @@ public class PFoil {
 		return val_retour;
 	}
 	
-	/*public static Vector<Instance> foilProp(Vector<Instance> pos, Vector<Instance> neg){
-		Vector<Regle> regles = new Vector<Regle>();
+	public Litteral maxGain(ArrayList<Litteral> litteraux, Vector<Instance> pos, Vector<Instance> neg){
+		double maximum = 0.0;
+		Litteral maxLitt = new Litteral();
 		
+		for(Litteral l : listeLitteraux){
+			l.tostring();
+			l.setGain(gain(l, pos, neg));
+			if(l.getGain() > maximum){
+				maximum = l.getGain();
+				maxLitt = l;
+			}
+		}
+		return maxLitt;
+	}
+	public void afficheVectorInstance(Vector<Instance> v){
+		for(Instance i : v){
+			System.out.println(i.toString());
+		}
+	}
+	public /*static Vector<Instance>*/ void foilProp(Vector<Instance> pos, Vector<Instance> neg){
+		//Vector<Regle> regles = new Vector<Regle>();
+		
+		//on test avec les règles dans un tableau de chaine de caractère
+		//ArrayList<String> regles = new ArrayList<String>();
+		String regle = "Si ";
 		while(pos.size()!=0){
-			Regle r = new Regle();
+			//Regle r = new Regle();
 			//candidats
 			Vector<Instance> neg2 = neg;
 			Vector<Instance> pos2 = pos;
+			System.out.println("\n--------Affichage de neg2---------------");
+			afficheVectorInstance(neg2);
+			System.out.println("\n--------Affichage de pos2---------------");
+			afficheVectorInstance(pos2);
 			
+			Litteral l = new Litteral();
 			while (neg2.size()!=0) {
-				
+				l =  maxGain(listeLitteraux, pos2, neg2);
+				regle +=l.tostring();
+				regle += " ";
+				System.out.println("\n-----Ajout de la condition à la règle-----");
+				System.out.println(regle);
+				retraitL(neg2, l);
+				retraitL(pos2, l);
+				System.out.println("\n--------Affichage de neg2 après suppression du litteral---------------");
+				afficheVectorInstance(neg2);
+				System.out.println("\n--------Affichage de pos2 suppression du litteral ---------------");
+				afficheVectorInstance(pos2);
 			}
+			regle += " Sport = oui ";
+			regle = "Si ";
+			System.out.println(regle);
+			//regles.add(regle);
+			retraitL2(pos, l);
 		}
 		
-		return regles;
+		/*return regles;*/
 		
-	}*/
+	}
 	
 	public void splitData(Vector<Instance> pos, Vector<Instance> neg, Instances data, Attribute classAttr){
 		
